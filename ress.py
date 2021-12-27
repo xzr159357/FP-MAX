@@ -43,8 +43,80 @@ def get_itemTable(sql :str) -> Dict[str, set]:
 
     return item_table
 
+# 新SQL解析，处理聚合函数，但是将聚合函数里的item也看做独立的项
+def get_itemFunc(sql : str) -> Dict[str, set]:
+    # 1.处理普通
+    pattern = r'\w*[.]\w*'
+    fields = re.findall(pattern, sql)
+    item_table : DefaultDict[str, set] = {}
+    item_table = defaultdict(set)
+    for field in fields:
+        # 根据'.'分割表和字段
+        data = field.split('.', 1)
+        item_table[data[0]].add(data[1])
+
+    # 2.处理聚合函数
+    pattern = r'\w*[(]\w*[.]\w*[)]'
+    fields = re.findall(pattern, sql)
+    for field in fields:
+        # 聚合函数
+        pat1 = r'\w*[(]'
+        data1 = re.search(pat1, field)
+        # 列
+        pat2 = r'\w*[)]'
+        data2 = re.search(pat2, field)
+        # 收集的信息
+        msg = data1.group() + data2.group()
+        # 表名
+        pat3 = r'\w*[.]'
+        data3 = re.search(pat3, field)
+        table_name = data3.group()[:-1]
+        item_table[table_name].add(msg)
+
+    # 处理为list
+    for item, itemsets in item_table.items():
+        item_table[item] = [str(itemset) for itemset in itemsets]
+
+    return item_table
+
+# 全新的SQL处理函数，不将聚合函数里的列看做单独item
+def get_itemtable(sql : str) -> Dict[str, set]:
+    # 1.处理普通
+    pattern = r'[^ ]*[.][^ ]*'
+    fields = re.findall(pattern, sql)
+    item_table: DefaultDict[str, set] = {}
+    item_table = defaultdict(set)
+    # pattern，聚合函数测试
+    patternTest = r'\w*[(]\w*[.]\w*[)]'
+    for field in fields:
+        # 根据'.'分割表和字段
+        if re.search(patternTest, field) != None:
+            # 聚合函数
+            pat1 = r'\w*[(]'
+            data1 = re.search(pat1, field)
+            # 列
+            pat2 = r'\w*[)]'
+            data2 = re.search(pat2, field)
+            # 收集的信息
+            msg = data1.group() + data2.group()
+            # 表名
+            pat3 = r'\w*[.]'
+            data3 = re.search(pat3, field)
+            table_name = data3.group()[:-1]
+            item_table[table_name].add(msg)
+        else:
+            patt = r'\w*[.]\w*'
+            reField = re.search(patt, field)
+            field = reField.group()
+            data = field.split('.', 1)
+            item_table[data[0]].add(data[1])
+
+    # 处理为list
+    for item, itemsets in item_table.items():
+        item_table[item] = [str(itemset) for itemset in itemsets]
+    return item_table
 
 if __name__ == "__main__":
-    item_table = get_itemTable(sql)
+    item_table = get_itemtable(sql)
     for item, itemset in item_table.items():
         print(item + " , " + str(itemset))
