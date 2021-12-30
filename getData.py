@@ -15,18 +15,34 @@ def findAllFile(base):
 # 将解析完的SQL语句写入list
 def get_trans():
     base = './join-order-benchmark/' # 文件夹路径
-    itemAll : defaultdict[str, set] = {}
-    itemAll = defaultdict(set)
+    # itemAll : defaultdict[str, set] = {}
+    itemAll = defaultdict(list)
     index = 0
     for f in findAllFile(base):
         with open(f) as file:
             data = file.read()
-            item_table = ress.get_itemTable(data)
-            for _, item in item_table.items():
-                itemAll['T' + str(1000 + index)] = item
-                index += 1
+            item_table = ress.get_itemstable(data)
+            # print(item_table)
+            for item_name, item in item_table.items():
+                # itemAll['T' + str(10000 + index)] = item
+                # index += 1
+                itemAll[item_name].append(item)
 
-    return itemAll
+    ansItem = defaultdict(dict)
+    for item_name, item in itemAll.items():
+        if item_name == '':
+           continue
+        map = defaultdict(list)
+        index = 0
+        for data in item:
+            map['T' + str(10000 + index)] = data
+            index += 1
+        ansItem[item_name] = map
+
+    return ansItem
 
 if __name__ == '__main__':
-    get_trans()
+    itemAll = get_trans()
+    for item_name, name in itemAll.items():
+        print(item_name)
+        print(name)

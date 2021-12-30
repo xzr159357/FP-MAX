@@ -129,10 +129,42 @@ def FPGrowth(transaction: dict, min_sup: float) -> Dict[str, List[List[str]]]:
     return dict(result)
 
 
-transactions = {}
+transactions =  {'T10000': ['person_role_id', 'role_id', 'note', 'movie_id'],
+                'T10001': ['person_role_id', 'role_id', 'note', 'movie_id'],
+                'T10002': ['person_role_id', 'role_id', 'note', 'movie_id'],
+                'T10003': ['person_id', 'movie_id'],
+                'T10004': ['person_id', 'movie_id'],
+                'T10005': ['person_id', 'movie_id'],
+                'T10006': ['person_id', 'movie_id'],
+                'T10007': ['person_id', 'movie_id'],
+                'T10008': ['person_id', 'movie_id'],
+                'T10009': ['person_id', 'movie_id'],
+                'T10010': ['person_id', 'movie_id'],
+                'T10011': ['person_id', 'movie_id'],
+                'T10012': ['person_id', 'movie_id'],
+                'T10013': ['person_id', 'note', 'movie_id'],
+                'T10014': ['person_id', 'note', 'movie_id'],
+                'T10015': ['person_id', 'note', 'movie_id'],
+                'T10016': ['role_id', 'note', 'movie_id',
+                           'person_id', 'person_role_id'],
+                'T10017': ['role_id', 'note', 'movie_id', 'person_id', 'person_role_id'],
+                'T10018': ['role_id', 'note', 'movie_id', 'person_id', 'person_role_id'],
+                'T10019': ['role_id', 'note', 'movie_id', 'person_id', 'person_role_id'],
+                'T10020': ['person_id', 'person_role_id', 'movie_id'],
+                'T10021': ['person_id', 'person_role_id', 'movie_id'],
+                'T10022': ['person_id', 'person_role_id', 'movie_id'],
+                'T10023': ['role_id', 'note', 'movie_id', 'person_id',
+                           'person_role_id'],
+                'T10024': ['role_id', 'note', 'movie_id', 'person_id', 'person_role_id'],
+                'T10025': ['person_id', 'note', 'movie_id'],
+                'T10026': ['person_id', 'note', 'movie_id'],
+                'T10027': ['person_id', 'note', 'movie_id'],
+                'T10028': ['person_id', 'person_role_id', 'movie_id'],
+                'T10029': ['person_id', 'person_role_id', 'movie_id'], 'T10030': ['person_id', 'person_role_id', 'movie_id'], 'T10031': ['role_id', 'note', 'movie_id', 'person_id', 'person_role_id'], 'T10032': ['role_id', 'note', 'movie_id', 'person_id', 'person_role_id'], 'T10033': ['role_id', 'note', 'movie_id', 'person_id', 'person_role_id'], 'T10034': ['person_id', 'note', 'movie_id'], 'T10035': ['person_id', 'note', 'movie_id'], 'T10036': ['person_id', 'note', 'movie_id'], 'T10037': ['person_id', 'note', 'movie_id'], 'T10038': ['person_id', 'note', 'movie_id'], 'T10039': ['person_id', 'note', 'movie_id'], 'T10040': ['person_id', 'movie_id'], 'T10041': ['person_id', 'movie_id'], 'T10042': ['person_id', 'movie_id'], 'T10043': ['person_id', 'movie_id'], 'T10044': ['person_id', 'movie_id'], 'T10045': ['person_id', 'movie_id'], 'T10046': ['person_id', 'movie_id'], 'T10047': ['person_id', 'movie_id'], 'T10048': ['person_id', 'movie_id'], 'T10049': ['person_id', 'role_id', 'note', 'movie_id'], 'T10050': ['person_id', 'role_id', 'note', 'movie_id'], 'T10051': ['person_id', 'role_id', 'movie_id'], 'T10052': ['person_id', 'role_id', 'movie_id'], 'T10053': ['role_id', 'note', 'movie_id', 'person_id', 'person_role_id'], 'T10054': ['role_id', 'note', 'movie_id', 'person_id', 'person_role_id'], 'T10055': ['role_id', 'note', 'movie_id', 'person_id', 'person_role_id'], 'T10056': ['role_id', 'note', 'movie_id', 'person_id', 'person_role_id']
+                }
 
 if __name__ == "__main__":
-    transactions = getData.get_trans()
+    # transactions = getData.get_trans()
     result = FPGrowth(transactions, 2)
     for k, v in result.items():
         print(k, ' : ', v)

@@ -3,6 +3,7 @@ from collections import Counter, defaultdict
 from typing import DefaultDict, Dict, List, Tuple
 from itertools import combinations
 import getData
+import time
 
 class Node(object):
     def __init__(self, name, fa) -> None:
@@ -163,10 +164,10 @@ def MFI_print(root : Node):
 # 全局变量
 head : List = [] # 论文中全局的第一个参数
 MFI_root : Node = Node('root', None) # MFI_tree的头部
-MFI_table : Dict # MFI_tree的头表
-MFI_item : List # 头表包含的元素
-MFI_hashMap : Dict # 头表元素的排序哈希表
-'''
+MFI_table : Dict = {} # MFI_tree的头表
+MFI_item : List = {} # 头表包含的元素
+MFI_hashMap : Dict = {} # 头表元素的排序哈希表
+
 transactions = {
     'T100' : ['a', 'b', 'c', 'e', 'f', 'o'],
     'T200' : ['a', 'c', 'g'],
@@ -179,7 +180,7 @@ transactions = {
     'T900' : ['a', 'c', 'e', 'g', 'm'],
     'T1000' : ['a', 'c', 'e', 'g', 'n']
 }
-'''
+
 
 
 def build_MFI_tree(path : List[str]):
@@ -203,10 +204,12 @@ def build_MFI_tree(path : List[str]):
 
 def FP_grouth(root : Node, item_table : Dict, n_sup : int):
     ret, path = get_single_path(root)
+    # print(path)
     global head, MFI_hashMap
     if ret:     # 只有一条路径
         path = path[::-1] # 反转
-        path.append(head[0])
+        if len(head) > 0:
+            path.append(head[0])
         path = sorted(path, key=lambda x : MFI_hashMap[x])
         # printPath(path)
         build_MFI_tree(path)
@@ -227,8 +230,8 @@ def FP_grouth(root : Node, item_table : Dict, n_sup : int):
                 size = len(item_tables)
                 itemStr = item_tables[size - 1]
                 flag = True
-                for item in MFI_table[itemStr]:
-                    k = size - 2
+                for item in MFI_table[itemStr]: # 找到存在最后一个元素的头表中结点
+                    k = size - 2 # 倒数第二元素比较
                     while k >= 0 and item.name != "root":
                         if item.fa.name == item_tables[k]:
                             k -= 1
@@ -274,17 +277,79 @@ transactions = {
 '''
 
 
+'''
+transactions = {'T10000': ['person_role_id', 'role_id', 'note', 'movie_id'],
+                'T10001': ['person_role_id', 'role_id', 'note', 'movie_id'],
+                'T10002': ['person_role_id', 'role_id', 'note', 'movie_id'],
+                'T10003': ['person_id', 'movie_id'],
+                'T10004': ['person_id', 'movie_id'],
+                'T10005': ['person_id', 'movie_id'],
+                'T10006': ['person_id', 'movie_id'],
+                'T10007': ['person_id', 'movie_id'],
+                'T10008': ['person_id', 'movie_id'],
+                'T10009': ['person_id', 'movie_id'],
+                'T10010': ['person_id', 'movie_id'],
+                'T10011': ['person_id', 'movie_id'],
+                'T10012': ['person_id', 'movie_id'],
+                'T10013': ['person_id', 'note', 'movie_id'],
+                'T10014': ['person_id', 'note', 'movie_id'],
+                'T10015': ['person_id', 'note', 'movie_id'],
+                'T10016': ['role_id', 'note', 'movie_id',
+                           'person_id', 'person_role_id'],
+                'T10017': ['role_id', 'note', 'movie_id', 'person_id', 'person_role_id'],
+                'T10018': ['role_id', 'note', 'movie_id', 'person_id', 'person_role_id'],
+                'T10019': ['role_id', 'note', 'movie_id', 'person_id', 'person_role_id'],
+                'T10020': ['person_id', 'person_role_id', 'movie_id'],
+                'T10021': ['person_id', 'person_role_id', 'movie_id'],
+                'T10022': ['person_id', 'person_role_id', 'movie_id'],
+                'T10023': ['role_id', 'note', 'movie_id', 'person_id',
+                           'person_role_id'],
+                'T10024': ['role_id', 'note', 'movie_id', 'person_id', 'person_role_id'],
+                'T10025': ['person_id', 'note', 'movie_id'],
+                'T10026': ['person_id', 'note', 'movie_id'],
+                'T10027': ['person_id', 'note', 'movie_id'],
+                'T10028': ['person_id', 'person_role_id', 'movie_id'],
+                'T10029': ['person_id', 'person_role_id', 'movie_id'], 'T10030': ['person_id', 'person_role_id', 'movie_id'], 'T10031': ['role_id', 'note', 'movie_id', 'person_id', 'person_role_id'], 'T10032': ['role_id', 'note', 'movie_id', 'person_id', 'person_role_id'], 'T10033': ['role_id', 'note', 'movie_id', 'person_id', 'person_role_id'], 'T10034': ['person_id', 'note', 'movie_id'], 'T10035': ['person_id', 'note', 'movie_id'], 'T10036': ['person_id', 'note', 'movie_id'], 'T10037': ['person_id', 'note', 'movie_id'], 'T10038': ['person_id', 'note', 'movie_id'], 'T10039': ['person_id', 'note', 'movie_id'], 'T10040': ['person_id', 'movie_id'], 'T10041': ['person_id', 'movie_id'], 'T10042': ['person_id', 'movie_id'], 'T10043': ['person_id', 'movie_id'], 'T10044': ['person_id', 'movie_id'], 'T10045': ['person_id', 'movie_id'], 'T10046': ['person_id', 'movie_id'], 'T10047': ['person_id', 'movie_id'], 'T10048': ['person_id', 'movie_id'], 'T10049': ['person_id', 'role_id', 'note', 'movie_id'], 'T10050': ['person_id', 'role_id', 'note', 'movie_id'], 'T10051': ['person_id', 'role_id', 'movie_id'], 'T10052': ['person_id', 'role_id', 'movie_id'], 'T10053': ['role_id', 'note', 'movie_id', 'person_id', 'person_role_id'], 'T10054': ['role_id', 'note', 'movie_id', 'person_id', 'person_role_id'], 'T10055': ['role_id', 'note', 'movie_id', 'person_id', 'person_role_id'], 'T10056': ['role_id', 'note', 'movie_id', 'person_id', 'person_role_id']
+                }
+'''
 
-transactions = {
 
-}
+# 清理所有全局变量
+def allClear():
+    global head, MFI_root, MFI_table, MFI_item, MFI_hashMap, ans_path, tmp_path
+    head.clear()
+    MFI_root = Node('root', None)
+    MFI_table.clear()
+    MFI_item.clear()
+    MFI_hashMap.clear()
+    ans_path.clear()
+    tmp_path.clear()
+
 
 if __name__ == "__main__":
-    # 获得transactions
-    transactions = getData.get_trans()
+    start = time.perf_counter()
+    '''
     MFI_item, MFI_hashMap = getSortHead(list(transactions.values()), 2)
     MFI_table_init()
     result = FPGrowth(transactions, 2)
     MFI_print(MFI_root)
     for item in ans_path:
         print(item)
+    '''
+
+    itemAll = getData.get_trans()
+    for item_name, item in itemAll.items():
+        allClear()
+        print(item_name)
+        transactions = item
+        MFI_item, MFI_hashMap = getSortHead(list(transactions.values()), 2)
+        print(MFI_item)
+        MFI_table_init()
+        result = FPGrowth(transactions, 2)
+        MFI_print(MFI_root)
+        #for item in ans_path:
+         #   print(item)
+
+    # 计时
+    end = time.perf_counter()
+    print('运行时间 = %ss' % (end - start))
